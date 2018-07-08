@@ -33,10 +33,13 @@ with open("training.dat", "r") as file:
     for line in file:
         arr = line.strip().split('|')
         board = [int(v) for v in arr[0:len(arr)-1]]
-        one_hot_labels = [int(v) for v in list(arr[len(arr)-1])]
+        score = int(arr[len(arr)-1])
+        one_hot_label = [1 if score == 1 else 0,
+                         1 if score == 0 else 0,
+                         1 if score == -1 else 0]
 
         X_train.append(board)
-        y_train.append(one_hot_labels)
+        y_train.append(one_hot_label)
 
 print 'Loaded training data ({} samples)'.format(len(X_train))
 
@@ -57,10 +60,10 @@ def baseline_model():
         # create model
     model = Sequential()
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
-    model.add(Dense(n_tiles, input_dim=2*n_tiles, activation='relu'))
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
-    model.add(Dense(n_tiles, activation='softmax'))
+    #model.add(Dense(n_tiles, input_dim=6, activation='relu'))
+    model.add(Dense(3, activation='softmax'))
     # Compile model
     model.compile(loss='categorical_crossentropy',
                   optimizer='adam', metrics=['accuracy'])
@@ -68,9 +71,17 @@ def baseline_model():
 
 
 estimator = KerasClassifier(build_fn=baseline_model,
-                            epochs=200, batch_size=500, verbose=1)
+                            epochs=100, batch_size=500, verbose=1)
 
-kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
+#kfold = KFold(n_splits=3, shuffle=True, random_state=seed)
+#results = cross_val_score(estimator, X_train, y_train, cv=kfold)
+#print("Baseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
 
-results = cross_val_score(estimator, X_train, y_train, cv=kfold)
-print("Baseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
+estimator.fit(X_train, y_train)
+
+
+print 'Saving model...'# serialize model to YAML
+json_model = estimator.model.to_json(indent=4)
+open('model_architecture.json', 'w').write(json_model)
+# saving weights
+estimator.model.save_weights('model_weights.h5', overwrite=True)
