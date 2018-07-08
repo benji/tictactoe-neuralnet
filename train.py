@@ -1,0 +1,76 @@
+import pandas as pd
+import math
+import json
+import sys
+import os
+import time
+import collections
+from tqdm import tqdm
+from os import path
+
+import numpy as np
+import pandas as pd
+from numpy import array
+
+
+#from sklearn.model_selection import cross_val_score
+#from sklearn.model_selection import KFold
+#from sklearn.pipeline import Pipeline
+#from sklearn.utils import shuffle
+
+# fix random seed for reproducibility
+seed = 7
+np.random.seed(seed)
+# np.random.seed(int(time.time()))
+
+board_size = 3
+n_tiles = board_size**2
+
+X_train = []
+y_train = []
+
+with open("training.dat", "r") as file:
+    for line in file:
+        arr = line.strip().split('|')
+        board = [int(v) for v in arr[0:len(arr)-1]]
+        one_hot_labels = [int(v) for v in list(arr[len(arr)-1])]
+
+        X_train.append(board)
+        y_train.append(one_hot_labels)
+
+print 'Loaded training data ({} samples)'.format(len(X_train))
+
+X_train = array(X_train)
+y_train = array(y_train)
+
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.wrappers.scikit_learn import KerasClassifier
+from keras.utils import np_utils
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import KFold
+from sklearn.preprocessing import LabelEncoder
+from sklearn.pipeline import Pipeline
+
+
+def baseline_model():
+        # create model
+    model = Sequential()
+    model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
+    model.add(Dense(n_tiles, input_dim=2*n_tiles, activation='relu'))
+    model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
+    model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
+    model.add(Dense(n_tiles, activation='softmax'))
+    # Compile model
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adam', metrics=['accuracy'])
+    return model
+
+
+estimator = KerasClassifier(build_fn=baseline_model,
+                            epochs=200, batch_size=500, verbose=1)
+
+kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
+
+results = cross_val_score(estimator, X_train, y_train, cv=kfold)
+print("Baseline: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))

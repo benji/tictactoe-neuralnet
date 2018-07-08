@@ -1,0 +1,25 @@
+3x3 board
+
+INPUT: 9 values [-1,0,-1]
+ex: -1,1,0,0,1,-1,-1,0,1
+
+OUPUT: 9 bits:
+000100000
+
+Build training dataset:
+- for each game:
+  - for all the moves of the game:
+    - if move made by winner:
+      save board before (input) and move (label)
+
+Format:
+  0:  unoccupied tile
+  1:  own tile
+  -1: opponent's tile
+  board tile value b={-1;0;1}
+
+  winner's move (label) l=[01]{9}
+
+  training data format: (b|){9}l
+
+  example: -1|0|0|0|1|0|0|0|0|001000000
