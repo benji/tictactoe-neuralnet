@@ -13,7 +13,7 @@ with open('training.dat', 'w') as file:
         game = TicTacToeGame(size=3)
         game.register_players(p1, p2)
         while not game.over:
-            game.play(print_game=False)
+            game.play()
         if game.winner_idx == 0:
             win_p1 = win_p1+1
         for data in game.serialize_training_data():

@@ -17,7 +17,7 @@ class TicTacToeGame:
     -1 -> player 2
     '''
 
-    def __init__(self, size=3):
+    def __init__(self, size=3, verbose=True):
         self.size = size
         self.board = np.zeros((self.size, self.size), dtype=int)
         self.players = [None, None]
@@ -25,13 +25,15 @@ class TicTacToeGame:
         self.over = False
         self.history = []
         self.winner_idx = None
-        print '== New game =='
+        self.verbose = verbose
+        if self.verbose:
+            print '== New game =='
 
     def register_players(self, p1, p2):
         self.players[0] = p1
         self.players[1] = p2
 
-    def play(self, print_game=False):
+    def play(self):
         if self.over:
             raise 'Game is over.'
         player_idx = self.play_count % 2
@@ -47,9 +49,6 @@ class TicTacToeGame:
 
         self.history.append((x, y, board_value))
         self.board[x][y] = board_value
-
-        if print_game:
-            self.print_game(borders=True)
 
         self.play_count = self.play_count+1
 
@@ -95,15 +94,16 @@ class TicTacToeGame:
 
     def end_game(self, reason, winner_idx):
         self.winner_idx = winner_idx
-        if self.winner_idx is None:
-            print 'Draw.'
-        else:
-            winner = self.players[winner_idx]
-            print reason
-            print 'Player {} wins.'.format(winner.name)
+        if self.verbose:
+            if self.winner_idx is None:
+                print 'Draw.'
+            else:
+                winner = self.players[winner_idx]
+                print reason
+                print 'Player {} wins.'.format(winner.name)
         self.over = True
 
-    def print_game(self, borders=False):
+    def print_board(self, borders=False):
         if borders:
             print '-----'
         for y in range(self.size):
@@ -111,17 +111,34 @@ class TicTacToeGame:
                 sys.stdout.write('|')
             for x in range(self.size):
                 v = self.board[x][y]
-                if v == 0:
-                    sys.stdout.write('.')
-                elif v == 1:
-                    sys.stdout.write('X')
-                elif v == -1:
-                    sys.stdout.write('O')
+                c = self.get_print_char(v)
+                sys.stdout.write(c)
             if borders:
                 sys.stdout.write('|')
             print ''
         if borders:
             print '-----'
+
+    def get_print_char(self, v):
+        if v == 0:
+            return '.'
+        elif v == 1:
+            return 'X'
+        elif v == -1:
+            return 'O'
+
+    def print_game(self):
+        for row in range(self.size):  # for each row
+            vals = [0, 0, 0]
+            sys.stdout.write('  ')
+            for x, y, v in self.history:  # replay history
+                if y == row:  # is move on that row?
+                    vals[x] = v
+                for v in vals:
+                    c = self.get_print_char(v)
+                    sys.stdout.write(c)
+                sys.stdout.write('  ')
+            print ''
 
     def get_available_tiles(self):
         available_tiles = []
@@ -151,19 +168,19 @@ class TicTacToeGame:
             move_training_data = None
             player_idx = 0 if val == 1 else 1
 
+            board_score = None
             if is_draw:
-                move_training_data = self.serialize_board_valuation(
-                    replay_board, player_idx, 0)  # 1
+                board_score = 0
             else:
+                moves_until_end = self.play_count - replay_play_count
+                board_score = self.size*self.size - moves_until_end
+
                 is_winner_move = val == PLAYERS_BOARD_VALUES[self.winner_idx]
-                move_until_end = self.play_count - replay_play_count
-
-                score = 1  # move_until_end+1
                 if not is_winner_move:
-                    score = -score
+                    board_score = -1*board_score
 
-                move_training_data = self.serialize_board_valuation(
-                    replay_board, player_idx, score)
+            move_training_data = self.serialize_board_valuation(
+                replay_board, player_idx, board_score)
 
             training_data.append(move_training_data)
             replay_play_count = replay_play_count + 1

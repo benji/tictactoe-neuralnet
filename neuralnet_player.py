@@ -10,11 +10,11 @@ from player import TicTacToePlayer
 class NeuralNetPlayer(TicTacToePlayer):
     def __init__(self, name):
         TicTacToePlayer.__init__(self, name)
-        '''
-        Loads trained model
-        '''
-        self.model = model_from_json(open('model_architecture.json').read())
-        self.model.load_weights('model_weights.h5')
+
+        # Loads trained model
+        self.model = model_from_json(
+            open('trained_models/{}_architecture.json'.format(name)).read())
+        self.model.load_weights('trained_models/{}_weights.h5'.format(name))
         self.model.compile(loss='categorical_crossentropy',
                            optimizer='adam', metrics=['accuracy'])
 
@@ -23,13 +23,12 @@ class NeuralNetPlayer(TicTacToePlayer):
         best_tile = None
         best_score = None
 
+        # Evaluates all possible moves
         for tile in available_tiles:
-            board_copy = deepcopy(game.board)  # possible board configuration
+            board_copy = deepcopy(game.board)
             board_copy[tile[0]][tile[1]] = -1 if player_idx == 1 else 1
-            X = np.array(game.board_to_array(board_copy, player_idx))
-            if (X.ndim == 1):
-                X = np.array([X])
-            y = self.model.predict([X])
+            board_array = game.board_to_array(board_copy, player_idx)
+            y = self.predict(board_array)
             #print y
             i = np.argmax(y)
             score = y[0][i]
@@ -44,3 +43,9 @@ class NeuralNetPlayer(TicTacToePlayer):
         # for now default to rand
         random_tile_idx = random.randint(0, len(available_tiles)-1)
         return available_tiles[random_tile_idx]
+
+    def predict(self, board_array):
+        X = np.array(board_array)
+        if (X.ndim == 1):
+            X = np.array([X])
+        return self.model.predict(X)

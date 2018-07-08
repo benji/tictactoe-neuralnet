@@ -20,7 +20,7 @@ from numpy import array
 
 # fix random seed for reproducibility
 seed = 7
-np.random.seed(seed)
+np.random.seed(seed)  # pylint: disable=E1101
 # np.random.seed(int(time.time()))
 
 board_size = 3
@@ -34,12 +34,9 @@ with open("training.dat", "r") as file:
         arr = line.strip().split('|')
         board = [int(v) for v in arr[0:len(arr)-1]]
         score = int(arr[len(arr)-1])
-        one_hot_label = [1 if score == 1 else 0,
-                         1 if score == 0 else 0,
-                         1 if score == -1 else 0]
 
         X_train.append(board)
-        y_train.append(one_hot_label)
+        y_train.append([score])
 
 print 'Loaded training data ({} samples)'.format(len(X_train))
 
@@ -63,15 +60,15 @@ def baseline_model():
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
     #model.add(Dense(n_tiles, input_dim=6, activation='relu'))
-    model.add(Dense(3, activation='softmax'))
+    model.add(Dense(1, activation='relu'))
     # Compile model
-    model.compile(loss='categorical_crossentropy',
+    model.compile(loss='mean_squared_error',
                   optimizer='adam', metrics=['accuracy'])
     return model
 
 
 estimator = KerasClassifier(build_fn=baseline_model,
-                            epochs=100, batch_size=500, verbose=1)
+                            epochs=300, batch_size=500, verbose=1)
 
 #kfold = KFold(n_splits=3, shuffle=True, random_state=seed)
 #results = cross_val_score(estimator, X_train, y_train, cv=kfold)
@@ -79,9 +76,9 @@ estimator = KerasClassifier(build_fn=baseline_model,
 
 estimator.fit(X_train, y_train)
 
-
-print 'Saving model...'# serialize model to YAML
+modelname = 'neuralnet2'
+print 'Saving model {}...'.format(modelname)
 json_model = estimator.model.to_json(indent=4)
-open('model_architecture.json', 'w').write(json_model)
-# saving weights
-estimator.model.save_weights('model_weights.h5', overwrite=True)
+open('trained_models/{}_architecture.json'.format(modelname), 'w').write(json_model)
+estimator.model.save_weights(
+    'trained_models/{}_weights.h5'.format(modelname), overwrite=True)
