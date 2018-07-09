@@ -19,34 +19,20 @@ otherwise:
 
 Example: A victorious move will make the resulting board position valued at 9
 
-##Sample output
-```Game 396 -> randbot1:4% neuralnet2:90% draw:6%
+## Sample output
+```Game 990 -> randbot1:2% neuralnet2:90% draw:8%
+Game 991 -> randbot1:2% neuralnet2:90% draw:8%
+Game 992 -> randbot1:2% neuralnet2:90% draw:8%
 random bot wins!
-  ..X  ..X  .XX  OXX  OXX  OXX  OXX  
-  ...  .O.  .O.  .O.  .O.  OO.  OOX  
-  ...  ...  ...  ...  ..X  ..X  ..X  
-Game 397 -> randbot1:4% neuralnet2:90% draw:6%
-Game 398 -> randbot1:4% neuralnet2:90% draw:6%
-Game 399 -> randbot1:4% neuralnet2:90% draw:6%
-Game 400 -> randbot1:4% neuralnet2:90% draw:6%
-Game 401 -> randbot1:4% neuralnet2:90% draw:6%
-Game 402 -> randbot1:4% neuralnet2:90% draw:6%
-Game 403 -> randbot1:4% neuralnet2:90% draw:6%
-Game 404 -> randbot1:4% neuralnet2:90% draw:6%
-Game 405 -> randbot1:4% neuralnet2:90% draw:6%
-Game 406 -> randbot1:4% neuralnet2:90% draw:6%
-Game 407 -> randbot1:4% neuralnet2:90% draw:6%
-Game 408 -> randbot1:4% neuralnet2:90% draw:6%
-Game 409 -> randbot1:4% neuralnet2:90% draw:6%
-Game 410 -> randbot1:4% neuralnet2:90% draw:6%
-Game 411 -> randbot1:4% neuralnet2:90% draw:6%
-Game 412 -> randbot1:4% neuralnet2:90% draw:6%
-Game 413 -> randbot1:4% neuralnet2:90% draw:6%
-Game 414 -> randbot1:4% neuralnet2:90% draw:6%
-Game 415 -> randbot1:4% neuralnet2:90% draw:6%
-random bot wins!
-  ...  ...  ..X  O.X  O.X  
-  ..X  .OX  .OX  .OX  .OX  
-  ...  ...  ...  ...  ..X  
-Game 416 -> randbot1:4% neuralnet2:90% draw:6%
+  ...  O..  OX.  OX.  OX.  OX.  OX.  
+  .X.  .X.  .X.  .X.  XX.  XX.  XXX  
+  ...  ...  ...  .O.  .O.  OO.  OO.  
+Game 993 -> randbot1:2% neuralnet2:90% draw:8%
+Game 994 -> randbot1:2% neuralnet2:90% draw:8%
+Game 995 -> randbot1:2% neuralnet2:90% draw:8%
+Game 996 -> randbot1:2% neuralnet2:90% draw:8%
+Game 997 -> randbot1:2% neuralnet2:90% draw:8%
+Game 998 -> randbot1:2% neuralnet2:90% draw:8%
+Game 999 -> randbot1:2% neuralnet2:90% draw:8%
+Game 1000 -> randbot1:2% neuralnet2:90% draw:8%
 ```

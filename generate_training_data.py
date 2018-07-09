@@ -4,13 +4,16 @@ from random_player import RandomTicTacToePlayer
 p1 = RandomTicTacToePlayer('randbot1')
 p2 = RandomTicTacToePlayer('randbot2')
 
-n_games = 10000
+n_games = 50000
 
 win_p1 = 0
+print_every=1000
 
 with open('training.dat', 'w') as file:
-    for _ in xrange(n_games):
-        game = TicTacToeGame(size=3)
+    for i in xrange(n_games):
+        if (i+1)%print_every == 0:
+            print '{}/{}'.format(i+1, n_games)
+        game = TicTacToeGame(size=3, verbose=False)
         game.register_players(p1, p2)
         while not game.over:
             game.play()
@@ -20,4 +23,4 @@ with open('training.dat', 'w') as file:
             file.write(data+'\n')
 
 p1pct = win_p1*100/n_games
-print "%win P1:{}% P2:{}%".format(p1pct,100-p1pct)
+print "%win P1:{}% P2:{}%".format(p1pct, 100-p1pct)

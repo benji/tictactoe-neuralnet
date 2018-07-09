@@ -68,7 +68,7 @@ def baseline_model():
 
 
 estimator = KerasClassifier(build_fn=baseline_model,
-                            epochs=300, batch_size=500, verbose=1)
+                            epochs=250, batch_size=500, verbose=1)
 
 #kfold = KFold(n_splits=3, shuffle=True, random_state=seed)
 #results = cross_val_score(estimator, X_train, y_train, cv=kfold)

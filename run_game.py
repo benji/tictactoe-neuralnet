@@ -33,4 +33,4 @@ for i in xrange(n_games):
     p2pct = win_p2*100/(i+1)
     drawpct = 100-p1pct-p2pct
     print "Game {} -> {}:{}% {}:{}% draw:{}%".format(
-        i, p1.name, p1pct, p2.name, p2pct, drawpct)
+        i+1, p1.name, p1pct, p2.name, p2pct, drawpct)
