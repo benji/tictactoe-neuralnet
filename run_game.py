@@ -3,6 +3,7 @@ from random_player import RandomTicTacToePlayer
 from neuralnet_player import NeuralNetPlayer
 
 n_games = 1000
+print_every = 100
 
 p1 = RandomTicTacToePlayer('randbot1')
 #p1 = NeuralNetPlayer('neuralnet1')
@@ -29,8 +30,9 @@ for i in xrange(n_games):
         else:
             win_p2 = win_p2+1
 
-    p1pct = win_p1*100/(i+1)
-    p2pct = win_p2*100/(i+1)
-    drawpct = 100-p1pct-p2pct
-    print "Game {} -> {}:{}% {}:{}% draw:{}%".format(
-        i+1, p1.name, p1pct, p2.name, p2pct, drawpct)
+    if (i+1) % print_every == 0:
+        p1pct = win_p1*100/(i+1)
+        p2pct = win_p2*100/(i+1)
+        drawpct = 100-p1pct-p2pct
+        print "Game {} -> {}:{}% ({}) {}:{}% ({}) draw:{}% ({})".format(
+            i+1, p1.name, p1pct, win_p1, p2.name, p2pct, win_p2, drawpct, n_games-win_p1-win_p2)

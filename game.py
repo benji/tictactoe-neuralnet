@@ -173,7 +173,7 @@ class TicTacToeGame:
                 board_score = 0
             else:
                 moves_until_end = self.play_count - replay_play_count
-                board_score = self.size*self.size - moves_until_end
+                board_score = (self.size*self.size - moves_until_end)
 
                 is_winner_move = val == PLAYERS_BOARD_VALUES[self.winner_idx]
                 if not is_winner_move:
