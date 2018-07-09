@@ -49,3 +49,14 @@ class NeuralNetPlayer(TicTacToePlayer):
         if (X.ndim == 1):
             X = np.array([X])
         return self.model.predict(X)
+
+    def print_weigths(self):
+        print self.model.summary()
+        for i in range(len(self.model.layers)):
+            print 'Layer {}'.format(i)
+            layer = self.model.layers[i]
+            all_weigths = layer.get_weights()
+            for weigths in all_weigths:
+                print weigths
+
+
