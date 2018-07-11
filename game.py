@@ -164,16 +164,20 @@ class TicTacToeGame:
 
         replay_play_count = 0
         for x, y, val in self.history:
-            replay_board[x][y] = val
-            move_training_data = None
             player_idx = 0 if val == 1 else 1
 
+            replay_board[x][y] = val
+            replay_play_count = replay_play_count + 1
+
+            move_training_data = None
             board_score = None
+            
             if is_draw:
                 board_score = 0
             else:
                 moves_until_end = self.play_count - replay_play_count
                 board_score = (self.size*self.size - moves_until_end)
+                #board_score = 1 if moves_until_end == 0 else 1
 
                 is_winner_move = val == PLAYERS_BOARD_VALUES[self.winner_idx]
                 if not is_winner_move:
@@ -183,7 +187,42 @@ class TicTacToeGame:
                 replay_board, player_idx, board_score)
 
             training_data.append(move_training_data)
+
+        return training_data
+
+    def serialize_training_data_old(self):
+        # all the moves made by the winner
+        training_data = []
+        # keep track of the board over time
+        replay_board = np.zeros((self.size, self.size), dtype=int)
+
+        is_draw = self.winner_idx is None
+
+        replay_play_count = 0
+        for x, y, val in self.history:
+            player_idx = 0 if val == 1 else 1
+
+            replay_board[x][y] = val
             replay_play_count = replay_play_count + 1
+
+            move_training_data = None
+            board_score = None
+            
+            if is_draw:
+                board_score = 0
+            else:
+                moves_until_end = self.play_count - replay_play_count
+                #board_score = (self.size*self.size - moves_until_end)
+                board_score = 1 if moves_until_end == 0 else 1
+
+                is_winner_move = val == PLAYERS_BOARD_VALUES[self.winner_idx]
+                if not is_winner_move:
+                    board_score = -1*board_score
+
+            move_training_data = self.serialize_board_valuation(
+                replay_board, player_idx, board_score)
+
+            training_data.append(move_training_data)
 
         return training_data
 
@@ -198,7 +237,7 @@ class TicTacToeGame:
                 arr.append(v)
         return arr
 
-    def serialize_board_valuation(self, board_data, player_idx, score):
+    def serialize_board_valuation(self, board_data, player_idx, label):
         board_arr = self.board_to_array(board_data, player_idx)
         ser_vals = [str(v) for v in board_arr]
-        return '|'.join(ser_vals)+'|'+str(score)
+        return '|'.join(ser_vals)+'|'+str(label)

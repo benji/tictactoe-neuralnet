@@ -54,14 +54,14 @@ from sklearn.pipeline import Pipeline
 
 
 def baseline_model():
-        # create model
     model = Sequential()
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
+    #model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
     #model.add(Dense(n_tiles, input_dim=6, activation='relu'))
     model.add(Dense(1, activation='relu'))
-    # Compile model
+
     model.compile(loss='mean_squared_error',
                   optimizer='adam', metrics=['accuracy'])
     return model
@@ -76,7 +76,7 @@ estimator = KerasClassifier(build_fn=baseline_model,
 
 estimator.fit(X_train, y_train)
 
-modelname = 'neuralnet2'
+modelname = 'neuralnet3'
 print 'Saving model {}...'.format(modelname)
 json_model = estimator.model.to_json(indent=4)
 open('trained_models/{}_architecture.json'.format(modelname), 'w').write(json_model)

@@ -8,8 +8,10 @@ from player import TicTacToePlayer
 
 
 class NeuralNetPlayer(TicTacToePlayer):
-    def __init__(self, name):
+    def __init__(self, name, random=False):
         TicTacToePlayer.__init__(self, name)
+
+        self.random = random
 
         # Loads trained model
         self.model = model_from_json(
@@ -20,29 +22,37 @@ class NeuralNetPlayer(TicTacToePlayer):
 
     def play(self, game, player_idx):
         available_tiles = game.get_available_tiles()
-        best_tile = None
-        best_score = None
+
+        rated_moves = {}
 
         # Evaluates all possible moves
         for tile in available_tiles:
             board_copy = deepcopy(game.board)
+
             board_copy[tile[0]][tile[1]] = -1 if player_idx == 1 else 1
+
             board_array = game.board_to_array(board_copy, player_idx)
             y = self.predict(board_array)
-            #print y
-            i = np.argmax(y)
-            score = y[0][i]
-            if i == 0:
-                if best_score is None or score > best_score:
-                    best_score = score
-                    best_tile = tile
 
-        if best_tile is not None:
-            return best_tile
+            score = y[0][0]
+            rated_moves[score] = tile
 
-        # for now default to rand
-        random_tile_idx = random.randint(0, len(available_tiles)-1)
-        return available_tiles[random_tile_idx]
+        sorted_scores = sorted(rated_moves.keys(), reverse=True)
+        #for sc in sorted_scores:
+        #    print rated_moves[sc], sc
+
+        if not self.random:
+            return rated_moves[sorted_scores[0]]
+
+        # introduce some kind of randomness
+        required_proba = .5
+        i = 0
+        while i < len(sorted_scores)-1:
+            if random.uniform(0, 1) < required_proba:
+                return rated_moves[sorted_scores[i]]
+            i = i+1
+
+        return rated_moves[sorted_scores[-1]]
 
     def predict(self, board_array):
         X = np.array(board_array)
@@ -58,5 +68,3 @@ class NeuralNetPlayer(TicTacToePlayer):
             all_weigths = layer.get_weights()
             for weigths in all_weigths:
                 print weigths
-
-
