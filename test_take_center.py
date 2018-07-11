@@ -1,9 +1,7 @@
 from game import TicTacToeGame
-from random_player import RandomTicTacToePlayer
-from neuralnet_player import NeuralNetPlayer
-from static_player import StaticPlayer
+from players import *
 
-p2 = NeuralNetPlayer('neuralnet2')
+p2 = NeuralNetPlayer('neuralnet3')
 
 for y in range(3):
     for x in range(3):
