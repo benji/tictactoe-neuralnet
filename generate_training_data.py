@@ -1,47 +1,13 @@
 from game import TicTacToeGame
 from players import *
 
-settings1 = [
-    {
-        'n_games': 10000,
-        'p1':RandomTicTacToePlayer('randbot1'),
-        'p2':RandomTicTacToePlayer('randbot2')  
-    },
-    {
-        'n_games': 10000,
-        'p1':NeuralNetPlayer('neuralnet2', random=True),
-        'p2':RandomTicTacToePlayer('randbot2')  
-    },
-    {
-        'n_games': 10000,
-        'p1':RandomTicTacToePlayer('randbot2'),
-        'p2':NeuralNetPlayer('neuralnet2', random=True)
-    },
-    {
-        'n_games': 10000,
-        'p1':NeuralNetPlayer('neuralnet2', random=True),
-        'p2':NeuralNetPlayer('neuralnet2', random=True)
-    }
-]
-settings2 = [
-    {
-        'n_games': 100000,
-        'p1':NeuralNetPlayer('neuralnet2', random=True),
-        'p2':MultiPlayer('multiplayer',[
-            NeuralNetPlayer('neuralnet2', random=True),
-            RandomTicTacToePlayer('randbot2')
-        ])
-    }
-]
-settings3 = [
+settings = [
     {
         'n_games': 50000,
         'p1':RandomTicTacToePlayer('rand1'),
         'p2':RandomTicTacToePlayer('rand2')
     }
 ]
-
-settings = settings3
 
 file = open('training.dat', 'w')
 

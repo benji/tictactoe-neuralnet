@@ -7,7 +7,7 @@ p2 = RandomTicTacToePlayer('randbot2')
 training_data_desired_size = 1000000
 
 # find ratio
-factor=0.9
+factor=1.2
 desired_games_per_board_size = {}
 desired_game_ratio_per_board_size = {1: 9}
 for board_size in range(2, 9):

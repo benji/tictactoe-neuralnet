@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 from numpy import array
 
+from sklearn.utils import shuffle
 
 #from sklearn.model_selection import cross_val_score
 #from sklearn.model_selection import KFold
@@ -43,6 +44,8 @@ print 'Loaded training data ({} samples)'.format(len(X_train))
 X_train = array(X_train)
 y_train = array(y_train)
 
+X_train, y_train = shuffle(X_train, y_train)
+
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.wrappers.scikit_learn import KerasClassifier
@@ -57,8 +60,7 @@ def baseline_model():
     model = Sequential()
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
     model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
-    model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
-    #model.add(Dense(n_tiles, input_dim=n_tiles, activation='relu'))
+    #model.add(Dense(n_tiles, input_dim=3, activation='relu'))
     #model.add(Dense(n_tiles, input_dim=6, activation='relu'))
     model.add(Dense(1, activation='relu'))
 
@@ -76,7 +78,7 @@ estimator = KerasClassifier(build_fn=baseline_model,
 
 estimator.fit(X_train, y_train)
 
-modelname = 'neuralnet3'
+modelname = 'neuralnet4'
 print 'Saving model {}...'.format(modelname)
 json_model = estimator.model.to_json(indent=4)
 open('trained_models/{}_architecture.json'.format(modelname), 'w').write(json_model)

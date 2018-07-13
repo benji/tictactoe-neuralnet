@@ -5,7 +5,8 @@ n_games = 1000
 print_every = 100
 
 p1 = RandomTicTacToePlayer('randbot1')
-p2 = NeuralNetPlayer('neuralnet3',random=True)
+#p1 = NeuralNetPlayer('neuralnet2',random=True)
+p2 = NeuralNetPlayer('neuralnet2',random=False)
 #p2 = NeuralNetPlayer('neuralnet2',random=True)
 
 win_p1 = 0
