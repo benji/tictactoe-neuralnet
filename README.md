@@ -1,7 +1,12 @@
 # tictactoe-neuralnet
 Using a Neural Network to play Tic Tac Toe
 
-There are trained models saved in trained_models/
+The neural network predicts the strength of a board for a player.
+The training data looks like this: board (9 values {0;1;-1}) -> score ([-9;9])
+The neural network will be used to assess the strength of all the possible moves of a player and select the best one.
+
+After trying many different neural network configuration, it seems the best result is achieved with a single hidden layer of 9 neurons.  
+The NN looks like this: 9 input -> 9 hidden -> 1 output.
 
 ## Result vs random
 
@@ -73,14 +78,3 @@ random bot wins!
   .X.  .X.  .X.  .X.  XX.  XXO  XXO  
 Game 1000 -> randbot1:1% (16) neuralnet2:91% (918) draw:8% (66)
 ```
-
-## TODO
-
-1 move  -> 9 possibilities
-2 moves -> 9x8
-3 moves -> 9x8x7
-
-make the distribution of training data match the above
-
-
-find a way to have a binary output (better for the training)
